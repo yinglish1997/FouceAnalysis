@@ -1,21 +1,3 @@
-# FouceAnalysis
-find the fouces in comments using spark　
-
-pathConfig:　　
-　　放置有各个字典的路径　　
-FouceAnalysis：　　
-　　电影评论的关注点分析，分析高、中、低分这三类电影所被备受关注的点。　　　
-    关注点设置：
-      －角色：男主角、女主角、反派、配角　　　
-      －制作：编剧、出品公司、导演、选景　　　
-      －剧情：开头、发展、结局、笑点、泪点　　　
-      －主题：风格、题材内容　　　
-      －视听：动作、画面、镜头、音乐　　
-原始数据：　　　
-    id:score:time:comment　　　
-    如：19749268897,8,T16-2-11,我很喜欢啊！男主角好帅好帅，剧情跌宕起伏，充满悬念，好看！　　
-代码思路（使用java\spark）：　　
-    将每一天评论切分，创建【评分：评论】键值对。　　
-    根据分数进行过滤，得到高分、中分、低分三个电影RDD。　　
-    对每条评论进行关注点查找，其实就是词频统计／字符串匹配。创建【评论：数组】键值对。数组存放有２４个数据，分别对应一个关注点。　　
-    对每一类RDD进行数组对应下标数据累加统计，最后得到三个　JavaRDD<Integer[]>，作为最终结果。　　
+# FouceAnalysis</br>　　
+find the fouces in comments using spark</br>　  
+pathConfig:　
