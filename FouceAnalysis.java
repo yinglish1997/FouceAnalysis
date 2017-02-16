@@ -87,7 +87,7 @@ public class FouceAnalysis {
 		
 		JavaPairRDD<String, Integer[]> lComScoreList = lowPointPairRDD.values().mapToPair(new stringArrayPair());
 		JavaRDD<Tuple2<String, Integer[]>> lResult = lComScoreList.map(new findFouces());
-		List<Tuple2<String, Integer[]>> m = mResult.collect();
+		
 //		for(Tuple2<String, Integer[]> tu: m){
 //			for(Integer i : tu._2){
 //				System.out.print(i + "  " );
@@ -101,17 +101,57 @@ public class FouceAnalysis {
 		int[] hFinalCalculate = finalCalculate(hResult);
 		int[] mFinalCalculate = finalCalculate(mResult);
 		int[] lFinalCalculate = finalCalculate(lResult);
-		System.out.println("--------------------------------highScore movies' fouce: -----------------------------------");
+		readResult(hFinalCalculate, mFinalCalculate, lFinalCalculate);
+	}
+	public static void printResult(int[] hFinalCalculate, int[] mFinalCalculate, int[] lFinalCalculate){
+		//输出打印结果
+		HashMap<String, Integer> fouceIndexMap = setHashMap(false);
+		System.out.println("highScore movies' fouce: -----------------------------------");
 		for(int i = 0; i < hFinalCalculate.length; i ++)
 			System.out.println(fouceIndexMap.get(i) + "  :   " +  hFinalCalculate[i] );
-		System.out.println("--------------------------------middle Score movies' fouce: -----------------------------------");
+		System.out.println("middle Score movies' fouce: -----------------------------------");
 		for(int i = 0; i < mFinalCalculate.length; i ++)
 			System.out.println(fouceIndexMap.get(i) + "  :   " +  mFinalCalculate[i] );
-		System.out.println("--------------------------------low Score movies' fouce: -----------------------------------");
+		System.out.println("low Score movies' fouce: -----------------------------------");
 		for(int i = 0; i <lFinalCalculate.length; i ++)
 			System.out.println(fouceIndexMap.get(i) + "  :   " +  lFinalCalculate[i] );
 	}
 	
+	public static void readResult(int[] high, int[] middle, int[] low){
+		//把结果写入文件，写入文件注意要bw.close()		
+		//否则会写不进去	
+	HashMap<String, Integer> fouceIndexMap = setHashMap(false);
+		try{
+			File file = new File("/home/yingying/SparkStatisticData/fouceAnalysis.txt");
+			if(!file.exists()){
+				file.createNewFile();
+			}
+			FileWriter fileWriter = new FileWriter(file, true);
+			BufferedWriter bw = new BufferedWriter(fileWriter);
+			bw.write("high score movie");
+			bw.write("\n");
+			for(int i = 0;i < high.length; i++){
+				bw.write(fouceIndexMap.get(i)  +  "    "  + String.valueOf(high[i]));
+			    bw.write("\n");				
+			}
+			bw.write("middle score movie");
+			bw.write("\n");
+			for(int i = 0;i <middle.length; i++){
+				bw.write(fouceIndexMap.get(i)  + "   "  +  String.valueOf(middle[i]));
+				bw.write("\n");				
+			}
+		   bw.write("-low score movie");
+			bw.write("\n");
+			for(int i = 0;i < low.length; i++){
+				bw.write(fouceIndexMap.get(i)  + String.valueOf(low[i]));
+				bw.write("\n");				
+			}
+			bw.close();
+			System.out.println("file write donne ");
+		}catch(IOException w){
+			w.printStackTrace();
+		}
+	}	
   static int[] finalCalculate(JavaRDD<Tuple2<String, Integer[]>> hResult){	 
 	  /*
 	   *  通过aggregate() 的RDD操作把所有的　Tuple2<String, Integer[]>记录进行数组对应下标累加计算，得到一类电影的24个关注点总得分
